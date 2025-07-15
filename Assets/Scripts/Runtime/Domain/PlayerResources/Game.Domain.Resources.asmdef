@@ -1,0 +1,16 @@
+{
+    "name": "TileHeroes.Domain.Resources",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e9ab71342790d456d9712398c05d48ea"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

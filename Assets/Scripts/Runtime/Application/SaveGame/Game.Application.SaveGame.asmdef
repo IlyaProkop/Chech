@@ -1,0 +1,18 @@
+{
+    "name": "Game.Application.SaveGame",
+    "rootNamespace": "",
+    "references": [
+        "GUID:51733a922ab174def91f4cd40cfd1d88",
+        "GUID:c57babf6c6111470285ffd59652da442",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

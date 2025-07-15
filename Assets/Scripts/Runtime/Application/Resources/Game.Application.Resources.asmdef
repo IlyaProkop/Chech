@@ -1,0 +1,4 @@
+{
+	"name": "Game.Application.Resources",
+	"references":[ "GUID:d94d9b16b9c5948fd835dbc3a5b649a0", "GUID:c57babf6c6111470285ffd59652da442", "GUID:30a6220fd9e6c4bc1aeb16c9a974db85", "GUID:e9ab71342790d456d9712398c05d48ea" ]
+}
