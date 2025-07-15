@@ -49,7 +49,7 @@ public static class EntityManagerOneTickExtensions
             }
 
             var oneTickEntity = entityManager.CreateEntity(archetype);
-            entityManager.SetComponentData(oneTickEntity, component);
+            entityManager.SetComponentData(oneTickEntity, new T{target = target});
             entityManager.SetComponentData(oneTickEntity, new OneTickEvent { oneTickMode = mode });
             return oneTickEntity;
         }

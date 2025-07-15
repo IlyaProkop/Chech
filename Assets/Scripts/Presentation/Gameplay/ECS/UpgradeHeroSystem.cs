@@ -3,7 +3,20 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Collections.LowLevel.Unsafe;
+using MessagePipe;
+using UnityEngine;
 
+public struct HeroUpgradedEvent
+{
+    public Entity HeroEntity;
+    public int NewLevel;
+    public int NewStrength;
+    public int NewHealth;
+}
+public static class MessagePipeServiceLocator
+{
+    public static IPublisher<HeroUpgradedEvent> HeroStatsChangedPublisher;
+}
 /// <summary>
 /// ECS система улучшения героя
 /// </summary>
@@ -17,30 +30,46 @@ public partial struct UpgradeHeroSystem : ISystem
     /// <param name="state">Состояние системы</param>
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
-    {        
+    {
         var entityManager = state.EntityManager;
         var query = SystemAPI.QueryBuilder().WithAll<UpgradeEvent>().Build();
         var events = query.ToComponentDataArray<UpgradeEvent>(Allocator.Temp);
-        
+        var entities = query.ToEntityArray(Allocator.Temp);
+
+        int k = 0;
         foreach (var upgrade in events)
         {
+
             var heroEntity = upgrade.target;
-            
+
             // Проверяем валидность сущности
             if (heroEntity == Entity.Null)
-            {                
+            {
                 var ecb = new EntityCommandBuffer(Allocator.TempJob);
                 var job = new UpgradeJob();
                 state.Dependency = job.ScheduleParallel(state.Dependency);
                 state.Dependency.Complete();
+                if (entityManager.HasComponent<HeroComponent>(entities[k]))
+                {
+                    var newHero = entityManager.GetComponentData<HeroComponent>(entities[k]);
+                    MessagePipeServiceLocator.HeroStatsChangedPublisher.Publish(
+                    new HeroUpgradedEvent
+                    {
+                        HeroEntity = entities[k],
+                        NewLevel = newHero.Level,
+                        NewStrength = newHero.Strength,
+                        NewHealth = newHero.Health
+                    });
+                }
+
                 ecb.Playback(state.EntityManager);
                 ecb.Dispose();
                 continue;
             }
-            
+
             if (!entityManager.Exists(heroEntity))
                 continue;
-                
+
             if (!entityManager.HasComponent<HeroComponent>(heroEntity))
                 continue;
 
@@ -50,9 +79,18 @@ public partial struct UpgradeHeroSystem : ISystem
             hero.Strength += 5;
             hero.Health += 10;
             hero.IsDirty = 1;
-            entityManager.SetComponentData(heroEntity, hero);            
+            entityManager.SetComponentData(heroEntity, hero);
+            Debug.Log("!!UpgradeJob 2");
+            MessagePipeServiceLocator.HeroStatsChangedPublisher.Publish(new HeroUpgradedEvent
+            {
+                HeroEntity = heroEntity,
+                NewLevel = hero.Level,
+                NewStrength = hero.Strength,
+                NewHealth = hero.Health
+            });
+            k++;
         }
-        
+
         events.Dispose();
     }
 
@@ -79,6 +117,7 @@ public partial struct UpgradeHeroSystem : ISystem
                 heroPtr->Health += 10;
                 heroPtr->IsDirty = 1;
             }
+
         }
     }
-} 
+}

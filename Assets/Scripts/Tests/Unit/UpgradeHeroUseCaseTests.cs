@@ -11,7 +11,7 @@ using Unity.Entities;
 public class UpgradeHeroUseCaseTests
 {
     private HeroData heroData;
-    private MockPublisher<UpgradeHeroMessage> mockPublisher;
+    private MockPublisher<UpgradeHeroCommand> mockPublisher;
     private UpgradeHeroUseCase useCase;
     private Entity heroEntity;
 
@@ -22,7 +22,7 @@ public class UpgradeHeroUseCaseTests
     public void Setup()
     {
         heroData = new HeroData();
-        mockPublisher = new MockPublisher<UpgradeHeroMessage>();
+        mockPublisher = new MockPublisher<UpgradeHeroCommand>();
         useCase = new UpgradeHeroUseCase(heroData, mockPublisher);
         heroEntity = new Entity();
     }

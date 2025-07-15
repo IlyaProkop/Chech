@@ -4,6 +4,7 @@ using UniRx;
 using VContainer;
 using UnityEngine;
 using Unity.Entities;
+using Unity.Collections;
 
 /// <summary>
 /// Presenter для управления отображением героя
@@ -12,7 +13,8 @@ public class HeroPresenter : IDisposable
 {
     private readonly IHeroView view;
     private readonly HeroData heroData;
-    private readonly IPublisher<UpgradeHeroMessage> publisher;
+    private readonly IPublisher<UpgradeHeroCommand> publisher;
+    private readonly ISubscriber<HeroUpgradedEvent> subscriber;
     private readonly Entity heroEntity;
 
     private readonly CompositeDisposable disposables = new CompositeDisposable();
@@ -24,13 +26,16 @@ public class HeroPresenter : IDisposable
     /// <param name="heroData">Данные героя</param>
     /// <param name="publisher">Публикатор сообщений</param>
     [Inject]
-    public HeroPresenter(IHeroView view, HeroData heroData, IPublisher<UpgradeHeroMessage> publisher)
+    public HeroPresenter(IHeroView view, HeroData heroData, Entity heroEntity,
+    IPublisher<UpgradeHeroCommand> publisher, ISubscriber<HeroUpgradedEvent> subscriber
+    )
     {
         Debug.Log("HeroPresenter constructor");
         this.view = view;
         this.heroData = heroData;
         this.publisher = publisher;
-        
+        this.heroEntity = heroEntity;
+        this.subscriber = subscriber;
         Initialize();
     }
 
@@ -47,8 +52,19 @@ public class HeroPresenter : IDisposable
 
         // Подписка на событие нажатия кнопки улучшения
         view.OnUpgradeClicked += HandleUpgradeClicked;
+
+        // Подписка на событие апгрейда
+        subscriber.Subscribe(OnHeroUpgraded);
         
         // Начальное обновление UI
+        UpdateView();
+    }
+
+    private void OnHeroUpgraded(HeroUpgradedEvent msg)
+    {
+        heroData.Level.Value = msg.NewLevel;
+        heroData.Strength.Value = msg.NewStrength;
+        heroData.Health.Value = msg.NewHealth;
         UpdateView();
     }
 
@@ -58,11 +74,11 @@ public class HeroPresenter : IDisposable
     private void HandleUpgradeClicked()
     {
         Debug.Log("HandleUpgradeClicked");
-        var message = new UpgradeHeroMessage
+        var message = new UpgradeHeroCommand
         {
             Entity = heroEntity
         };
-        
+
         publisher.Publish(message);
     }
 
@@ -82,4 +98,4 @@ public class HeroPresenter : IDisposable
         view.OnUpgradeClicked -= HandleUpgradeClicked;
         disposables?.Dispose();
     }
-} 
+}

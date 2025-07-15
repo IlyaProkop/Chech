@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using MessagePipe;
 using UniRx;
 using Unity.Entities;
+using UnityEngine;
 
 /// <summary>
 /// UseCase для улучшения героя
@@ -9,14 +10,14 @@ using Unity.Entities;
 public class UpgradeHeroUseCase
 {
     private readonly HeroData heroData;
-    private readonly IPublisher<UpgradeHeroMessage> publisher;
+    private readonly IPublisher<UpgradeHeroCommand> publisher;
 
     /// <summary>
     /// Конструктор UseCase
     /// </summary>
     /// <param name="heroData">Данные героя</param>
     /// <param name="publisher">Публикатор сообщений</param>
-    public UpgradeHeroUseCase(HeroData heroData, IPublisher<UpgradeHeroMessage> publisher)
+    public UpgradeHeroUseCase(HeroData heroData, IPublisher<UpgradeHeroCommand> publisher)
     {
         this.heroData = heroData;
         this.publisher = publisher;
@@ -29,17 +30,31 @@ public class UpgradeHeroUseCase
     /// <returns>Задача выполнения</returns>
     public async UniTask ExecuteAsync(Entity entity)
     {
-        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-      entityManager.SetOneTickComponent<UpgradeEvent>(entity);
-    
-        
-        var message = new UpgradeHeroMessage
+        var message = new UpgradeHeroCommand
         {
             Entity = entity
         };
-        
+
         publisher.Publish(message);
-        
+
         await UniTask.CompletedTask;
     }
-} 
+}
+
+public class UpgradeHeroMessageHandler : IMessageHandler<UpgradeHeroCommand>
+{
+    private readonly EntityManager entityManager;
+
+    public UpgradeHeroMessageHandler(EntityManager entityManager)
+    {
+        this.entityManager = entityManager;
+    }
+
+    public void Handle(UpgradeHeroCommand message)
+    {     
+        if (entityManager.Exists(message.Entity))
+        {   
+            entityManager.SetOneTickComponent<UpgradeEvent>(message.Entity, OneTickMode.OnCurrentEntity);
+        }
+    }
+}
