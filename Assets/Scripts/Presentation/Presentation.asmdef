@@ -1,0 +1,27 @@
+{
+    "name": "Presentation",
+    "rootNamespace": "",
+    "references": [
+        "UseCases",
+        "Abstractions",
+        "Unity.Entities",
+        "Unity.Collections",
+        "MessagePipe",
+        "UniRx",
+        "VContainer",
+        "Unity.Burst",
+        "ConstractInterfaces",
+        "UniTask",
+        "Domain",
+        "Unity.Mathematics"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

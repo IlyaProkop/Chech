@@ -1,0 +1,22 @@
+{
+    "name": "UseCases",
+    "rootNamespace": "",
+    "references": [
+        "Domain",
+        "Abstractions",
+        "MessagePipe",
+        "UniTask",
+        "UniRx",
+        "Unity.Entities",
+        "Unity.Collections"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

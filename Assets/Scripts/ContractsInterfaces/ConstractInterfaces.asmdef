@@ -1,0 +1,16 @@
+{
+    "name": "ConstractInterfaces",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5e8db5e0fdc0f714191e53bc0c35e4ca"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -5,7 +5,7 @@ using VContainer;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Collections;
-
+    
 /// <summary>
 /// Presenter для управления отображением героя
 /// </summary>
